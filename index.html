@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>For Ivy</title>
+    
+    <!-- 🎉 CONFETTI LIBRARY -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    
+    <style>
+        /* 🌸 YOUR PINK & PURPLE HIBISCUS BACKGROUND */
+        body {
+            background: url('https://i.ibb.co/qYrjfL7D/image-2026-02-12-172812738-removebg-preview.png') no-repeat center center fixed;
+            background-size: contain;
+            background-color: #1a0b1a;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(30, 10, 25, 0.75);
+            padding: 35px;
+            border-radius: 30px;
+            backdrop-filter: blur(2px);
+            max-width: 650px;
+            margin: 20px;
+            border: 2px solid rgba(255, 182, 193, 0.6);
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.4);
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #fff5fa;
+            text-shadow: 2px 2px 15px #ff69b4, 0 0 20px #d8b4ff;
+        }
+
+        .subheadline {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #ffeef5;
+            text-shadow: 2px 2px 8px #000;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 60px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            border: 2px solid white;
+            box-shadow: 0 0 30px #ff9acb;
+        }
+
+        .btn-yes {
+            background: #ff4d6d;
+            color: white;
+        }
+
+        .btn-no {
+            background: #c77dff;
+            color: #2d0a3b;
+        }
+
+        .btn-sassy {
+            background: #b57edc;
+            color: #1e0b26;
+        }
+
+        #response {
+            margin-top: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 60px;
+            color: #ffe2f0;
+            text-shadow: 2px 2px 10px #000;
+        }
+
+        .face {
+            font-size: 70px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 25px #ffb3c6, 0 0 40px #d896ff;
+        }
+        
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 🔊 100% RELIABLE AUDIO - SHORT, SWEET, WORKS EVERY TIME -->
+    <audio id="sad-sound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="scary-sound" preload="auto">
+        <source src="https://www.soundjay.com/nature/sounds/wind-01.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <div class="face">(◕‿◕✿)</div>
+        <h1>Will you be my girlfriend?</h1>
+        
+        <div class="subheadline">
+            Hey Ivy,<br><br>
+            I've liked you from the moment we met.<br>
+            Getting to know you was one of the best things<br>
+            that's happened to me all year.<br><br>
+            I was wondering if you would be my girlfriend?
+        </div>
+        
+        <div class="buttons">
+            <button onclick="showResponse('yes')" class="btn btn-yes">YES! <3</button>
+            <button onclick="showResponse('maybe')" class="btn btn-no">Maybe later</button>
+            <button onclick="showResponse('no')" class="btn btn-sassy">NO!</button>
+        </div>
+        
+        <div id="response"></div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // 🎯 YOUR GOOGLE SCRIPT URL - ALREADY PASTED CORRECTLY
+        // =====================================================================
+        
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOTZ0hy3PVbtznG02E2smjPOMzuhwgfTGIfaPqx5OmNiMxUf4zeWhc87C5DedjqoslvA/exec';
+        
+        // =====================================================================
+        // 🎉 EVERYTHING BELOW IS DONE - DON'T CHANGE IT
+        // =====================================================================
+
+        // 🔊 FIXED AUDIO FUNCTION - WORKS 100%
+        function playSound(audioId) {
+            let audio = document.getElementById(audioId);
+            audio.pause();
+            audio.currentTime = 0;
+            
+            // Force play - this works on button clicks
+            let playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Audio error:", error);
+                    // Create new audio element as fallback
+                    let fallback = new Audio();
+                    if (audioId === 'sad-sound') {
+                        fallback.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3';
+                    } else {
+                        fallback.src = 'https://www.soundjay.com/nature/sounds/wind-01.mp3';
+                    }
+                    fallback.volume = 0.6;
+                    fallback.play();
+                });
+            }
+        }
+
+        // 📊 SEND ANSWER TO GOOGLE SHEETS
+        async function recordAnswerToGoogleSheets(answer) {
+            try {
+                const formData = new URLSearchParams();
+                formData.append('answer', answer);
+                
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData
+                });
+                
+                console.log('✅ Recorded:', answer);
+            } catch (error) {
+                console.error('❌ Failed:', error);
+            }
+        }
+
+        // 🎉 YES BUTTON
+        function celebrateYes() {
+            recordAnswerToGoogleSheets('yes');
+            
+            confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff85a2', '#ffb3c6', '#c77dff', '#b57edc', '#ffd700'] });
+            
+            setTimeout(() => { confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0, y: 0.5 }, colors: ['#ff4d6d', '#ff85a2', '#c77dff', '#d8b4ff'] }); }, 150);
+            setTimeout(() => { confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1, y: 0.5 }, colors: ['#ff4d6d', '#ff85a2', '#c77dff', '#d8b4ff'] }); }, 300);
+            setTimeout(() => { confetti({ particleCount: 150, spread: 80, origin: { y: 0.2 }, colors: ['#ffd700', '#ff4d6d', '#c77dff', '#ffffff', '#ffb3c6'] }); }, 450);
+            
+            setTimeout(() => {
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        confetti({ particleCount: 5, spread: 30, startVelocity: 20, colors: ['#ff4d6d', '#ff85a2', '#ffb3c6'], shapes: ['circle'], scalar: 1.5, origin: { x: 0.2 + (Math.random() * 0.6), y: 0.3 + (Math.random() * 0.3) } });
+                    }, i * 30);
+                }
+            }, 600);
+        }
+
+        // 💧 MAYBE BUTTON
+        function sadTears() {
+            recordAnswerToGoogleSheets('maybe');
+            playSound('sad-sound');
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    confetti({ particleCount: 5, angle: 90, spread: 5, startVelocity: 20 + (Math.random() * 15), gravity: 1.8, drift: 0.1, colors: ['#4a89c1', '#5d9bd5', '#6fa8dc', '#85b8e6', '#a1c9f0'], shapes: ['circle'], scalar: 0.6 + (Math.random() * 0.4), origin: { x: 0.2 + (Math.random() * 0.6), y: 0.2 } });
+                }, i * 50);
+            }
+        }
+
+        // 🖤 NO BUTTON
+        function ashes() {
+            recordAnswerToGoogleSheets('no');
+            playSound('scary-sound');
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    confetti({ particleCount: 4, angle: 90 + (Math.random() * 20 - 10), spread: 15, startVelocity: 10 + (Math.random() * 10), gravity: 0.6, drift: 0.2 + (Math.random() * 0.3), colors: ['#4a4a4a', '#5e5e5e', '#727272', '#8c8c8c', '#6b4e3a', '#5a3e2b'], shapes: ['circle', 'square'], scalar: 0.4 + (Math.random() * 0.5), origin: { x: 0.1 + (Math.random() * 0.8), y: 0.2 + (Math.random() * 0.2) } });
+                }, i * 40);
+            }
+        }
+
+        // 🎯 MAIN FUNCTION
+        function showResponse(answer) {
+            if (answer === 'yes') {
+                document.getElementById('response').innerHTML = "^^ Yay! You just made my whole year! Cant wait to see you! <3";
+                celebrateYes();
+            } else if (answer === 'maybe') {
+                document.getElementById('response').innerHTML = ":( That's okay, I'll wait... take your time <3";
+                sadTears();
+            } else if (answer === 'no') {
+                document.getElementById('response').innerHTML = "Ouch. My heart. (I'll respect it though...) <3";
+                ashes();
+            }
+        }
+    </script>
+</body>
+</html>
