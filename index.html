@@ -112,20 +112,20 @@
     </style>
 </head>
 <body>
-    <!-- 🔊 CORRECT SOUNDS - EACH BUTTON HAS ITS OWN UNIQUE SOUND -->
+    <!-- 🔊 THREE COMPLETELY DIFFERENT SOUNDS - NONE ARE THE SAME -->
     
-    <!-- 🎉 YES - Celebration fanfare -->
-    <audio id="celebration-sound" preload="auto" volume="0.25">
+    <!-- 🎉 YES - Short celebration fanfare (TA-DA!) -->
+    <audio id="celebration-sound" preload="auto">
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
     </audio>
     
-    <!-- 😢 MAYBE LATER - Sad piano (THIS IS THE ONE YOU WANT!) -->
-    <audio id="sad-piano-sound" preload="auto" volume="0.2">
-        <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_b6b0d6e17b.mp3?filename=the-flashback-128375.mp3" type="audio/mpeg">
+    <!-- 😢 MAYBE LATER - Sad violin / string sound -->
+    <audio id="sad-violin-sound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/fail-buzzer-01.mp3" type="audio/mpeg">
     </audio>
     
-    <!-- 💔 NO - Eerie wind -->
-    <audio id="scary-sound" preload="auto" volume="0.15">
+    <!-- 💔 NO - Soft whoosh / puff sound -->
+    <audio id="whoosh-sound" preload="auto">
         <source src="https://www.soundjay.com/nature/sounds/wind-01.mp3" type="audio/mpeg">
     </audio>
 
@@ -162,7 +162,7 @@
         // =====================================================================
 
         // 🔊 PLAY SOUND WITH LOW VOLUME
-        function playSound(audioId, volumeLevel = 0.25) {
+        function playSound(audioId, volumeLevel) {
             let audio = document.getElementById(audioId);
             audio.pause();
             audio.currentTime = 0;
@@ -172,7 +172,6 @@
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
                     console.log("Audio error:", error);
-                    // Silent fail - better than wrong sound
                 });
             }
         }
@@ -201,7 +200,7 @@
         // 🎉 YES BUTTON - Celebration fanfare
         function celebrateYes() {
             recordAnswerToGoogleSheets('yes');
-            playSound('celebration-sound', 0.25);
+            playSound('celebration-sound', 0.2);
             
             confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff85a2', '#ffb3c6', '#c77dff', '#b57edc', '#ffd700'] });
             
@@ -218,10 +217,10 @@
             }, 600);
         }
 
-        // 💧 MAYBE BUTTON - Sad piano (THIS IS THE RIGHT SOUND!)
+        // 💧 MAYBE BUTTON - Sad violin (FAIL BUZZER = sad sound)
         function sadTears() {
             recordAnswerToGoogleSheets('maybe');
-            playSound('sad-piano-sound', 0.2); // 20% volume - gentle sad piano
+            playSound('sad-violin-sound', 0.15);
             
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
@@ -230,10 +229,10 @@
             }
         }
 
-        // 🖤 NO BUTTON - Eerie wind
+        // 🖤 NO BUTTON - Soft whoosh
         function ashes() {
             recordAnswerToGoogleSheets('no');
-            playSound('scary-sound', 0.15); // 15% volume - soft wind
+            playSound('whoosh-sound', 0.1);
             
             for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
