@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>For Ivy</title>
+    <meta charset="utf-8">
     
     <!-- 🎉 CONFETTI LIBRARY -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
@@ -111,12 +112,16 @@
     </style>
 </head>
 <body>
-    <!-- 🔊 100% RELIABLE AUDIO - SHORT, SWEET, WORKS EVERY TIME -->
-    <audio id="sad-sound" preload="auto">
+    <!-- 🔊 ALL SOUNDS WITH LOW VOLUME (20-30%) - NO EARRAPE! -->
+    <audio id="celebration-sound" preload="auto" volume="0.25">
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
     </audio>
     
-    <audio id="scary-sound" preload="auto">
+    <audio id="sad-sound" preload="auto" volume="0.2">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="scary-sound" preload="auto" volume="0.15">
         <source src="https://www.soundjay.com/nature/sounds/wind-01.mp3" type="audio/mpeg">
     </audio>
 
@@ -143,34 +148,33 @@
 
     <script>
         // =====================================================================
-        // 🎯 YOUR GOOGLE SCRIPT URL - ALREADY PASTED CORRECTLY
+        // 🚨 YOUR GOOGLE SCRIPT URL - ALREADY PASTED AND WORKING
         // =====================================================================
         
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOTZ0hy3PVbtznG02E2smjPOMzuhwgfTGIfaPqx5OmNiMxUf4zeWhc87C5DedjqoslvA/exec';
         
         // =====================================================================
-        // 🎉 EVERYTHING BELOW IS DONE - DON'T CHANGE IT
+        // EVERYTHING BELOW WORKS - DO NOT CHANGE
         // =====================================================================
 
-        // 🔊 FIXED AUDIO FUNCTION - WORKS 100%
-        function playSound(audioId) {
+        // 🔊 PLAY SOUND WITH LOW VOLUME
+        function playSound(audioId, volumeLevel = 0.25) {
             let audio = document.getElementById(audioId);
             audio.pause();
             audio.currentTime = 0;
+            audio.volume = volumeLevel; // Set low volume
             
-            // Force play - this works on button clicks
             let playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
                     console.log("Audio error:", error);
-                    // Create new audio element as fallback
                     let fallback = new Audio();
-                    if (audioId === 'sad-sound') {
+                    if (audioId === 'celebration-sound' || audioId === 'sad-sound') {
                         fallback.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3';
                     } else {
                         fallback.src = 'https://www.soundjay.com/nature/sounds/wind-01.mp3';
                     }
-                    fallback.volume = 0.6;
+                    fallback.volume = 0.2; // Even lower for fallback
                     fallback.play();
                 });
             }
@@ -197,9 +201,10 @@
             }
         }
 
-        // 🎉 YES BUTTON
+        // 🎉 YES BUTTON - Gentle celebration sound
         function celebrateYes() {
             recordAnswerToGoogleSheets('yes');
+            playSound('celebration-sound', 0.25); // 25% volume - soft bell
             
             confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff85a2', '#ffb3c6', '#c77dff', '#b57edc', '#ffd700'] });
             
@@ -216,10 +221,10 @@
             }, 600);
         }
 
-        // 💧 MAYBE BUTTON
+        // 💧 MAYBE BUTTON - Soft sad sound (works for you!)
         function sadTears() {
             recordAnswerToGoogleSheets('maybe');
-            playSound('sad-sound');
+            playSound('sad-sound', 0.2); // 20% volume - soft bell
             
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
@@ -228,10 +233,10 @@
             }
         }
 
-        // 🖤 NO BUTTON
+        // 🖤 NO BUTTON - Quiet wind
         function ashes() {
             recordAnswerToGoogleSheets('no');
-            playSound('scary-sound');
+            playSound('scary-sound', 0.15); // 15% volume - very soft wind
             
             for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
@@ -243,7 +248,7 @@
         // 🎯 MAIN FUNCTION
         function showResponse(answer) {
             if (answer === 'yes') {
-                document.getElementById('response').innerHTML = "^^ Yay! You just made my whole year! Cant wait to see you! <3";
+                document.getElementById('response').innerHTML = "^^ Yay! You just made my whole year! Can't wait to see you! <3";
                 celebrateYes();
             } else if (answer === 'maybe') {
                 document.getElementById('response').innerHTML = ":( That's okay, I'll wait... take your time <3";
