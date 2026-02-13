@@ -114,19 +114,19 @@
 <body>
     <!-- 🔊 THREE COMPLETELY DIFFERENT SOUNDS - NONE ARE THE SAME -->
     
-    <!-- 🎉 YES - Short celebration fanfare (TA-DA!) -->
+    <!-- 🎉 YES - Celebration trumpet / ta-da! -->
     <audio id="celebration-sound" preload="auto">
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+        <source src="https://www.soundjay.com/misc/sounds/ta-da-1.mp3" type="audio/mpeg">
     </audio>
     
-    <!-- 😢 MAYBE LATER - Sad violin / string sound -->
-    <audio id="sad-violin-sound" preload="auto">
-        <source src="https://www.soundjay.com/misc/sounds/fail-buzzer-01.mp3" type="audio/mpeg">
+    <!-- 😢 MAYBE LATER - Sad piano bell -->
+    <audio id="sad-piano-sound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/bell-voice-02.mp3" type="audio/mpeg">
     </audio>
     
-    <!-- 💔 NO - Soft whoosh / puff sound -->
-    <audio id="whoosh-sound" preload="auto">
-        <source src="https://www.soundjay.com/nature/sounds/wind-01.mp3" type="audio/mpeg">
+    <!-- 💔 NO - Cartoon boing (funny, bouncy) -->
+    <audio id="boing-sound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/boing-1.mp3" type="audio/mpeg">
     </audio>
 
     <div class="container">
@@ -197,7 +197,7 @@
             }
         }
 
-        // 🎉 YES BUTTON - Celebration fanfare
+        // 🎉 YES BUTTON - Celebration ta-da!
         function celebrateYes() {
             recordAnswerToGoogleSheets('yes');
             playSound('celebration-sound', 0.2);
@@ -217,10 +217,10 @@
             }, 600);
         }
 
-        // 💧 MAYBE BUTTON - Sad violin (FAIL BUZZER = sad sound)
+        // 💧 MAYBE BUTTON - Sad piano bell
         function sadTears() {
             recordAnswerToGoogleSheets('maybe');
-            playSound('sad-violin-sound', 0.15);
+            playSound('sad-piano-sound', 0.15);
             
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
@@ -229,10 +229,10 @@
             }
         }
 
-        // 🖤 NO BUTTON - Soft whoosh
+        // 🖤 NO BUTTON - Cartoon boing
         function ashes() {
             recordAnswerToGoogleSheets('no');
-            playSound('whoosh-sound', 0.1);
+            playSound('boing-sound', 0.12);
             
             for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
