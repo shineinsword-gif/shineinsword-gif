@@ -112,15 +112,19 @@
     </style>
 </head>
 <body>
-    <!-- 🔊 ALL SOUNDS WITH LOW VOLUME (20-30%) - NO EARRAPE! -->
+    <!-- 🔊 CORRECT SOUNDS - EACH BUTTON HAS ITS OWN UNIQUE SOUND -->
+    
+    <!-- 🎉 YES - Celebration fanfare -->
     <audio id="celebration-sound" preload="auto" volume="0.25">
         <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
     </audio>
     
-    <audio id="sad-sound" preload="auto" volume="0.2">
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+    <!-- 😢 MAYBE LATER - Sad piano (THIS IS THE ONE YOU WANT!) -->
+    <audio id="sad-piano-sound" preload="auto" volume="0.2">
+        <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_b6b0d6e17b.mp3?filename=the-flashback-128375.mp3" type="audio/mpeg">
     </audio>
     
+    <!-- 💔 NO - Eerie wind -->
     <audio id="scary-sound" preload="auto" volume="0.15">
         <source src="https://www.soundjay.com/nature/sounds/wind-01.mp3" type="audio/mpeg">
     </audio>
@@ -162,20 +166,13 @@
             let audio = document.getElementById(audioId);
             audio.pause();
             audio.currentTime = 0;
-            audio.volume = volumeLevel; // Set low volume
+            audio.volume = volumeLevel;
             
             let playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
                     console.log("Audio error:", error);
-                    let fallback = new Audio();
-                    if (audioId === 'celebration-sound' || audioId === 'sad-sound') {
-                        fallback.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3';
-                    } else {
-                        fallback.src = 'https://www.soundjay.com/nature/sounds/wind-01.mp3';
-                    }
-                    fallback.volume = 0.2; // Even lower for fallback
-                    fallback.play();
+                    // Silent fail - better than wrong sound
                 });
             }
         }
@@ -201,10 +198,10 @@
             }
         }
 
-        // 🎉 YES BUTTON - Gentle celebration sound
+        // 🎉 YES BUTTON - Celebration fanfare
         function celebrateYes() {
             recordAnswerToGoogleSheets('yes');
-            playSound('celebration-sound', 0.25); // 25% volume - soft bell
+            playSound('celebration-sound', 0.25);
             
             confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff85a2', '#ffb3c6', '#c77dff', '#b57edc', '#ffd700'] });
             
@@ -221,10 +218,10 @@
             }, 600);
         }
 
-        // 💧 MAYBE BUTTON - Soft sad sound (works for you!)
+        // 💧 MAYBE BUTTON - Sad piano (THIS IS THE RIGHT SOUND!)
         function sadTears() {
             recordAnswerToGoogleSheets('maybe');
-            playSound('sad-sound', 0.2); // 20% volume - soft bell
+            playSound('sad-piano-sound', 0.2); // 20% volume - gentle sad piano
             
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
@@ -233,10 +230,10 @@
             }
         }
 
-        // 🖤 NO BUTTON - Quiet wind
+        // 🖤 NO BUTTON - Eerie wind
         function ashes() {
             recordAnswerToGoogleSheets('no');
-            playSound('scary-sound', 0.15); // 15% volume - very soft wind
+            playSound('scary-sound', 0.15); // 15% volume - soft wind
             
             for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
