@@ -1,40 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For Ivy ❤️</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+
+<style>
+
+/* ================= BODY ================= */
+body{
+margin:0;
+font-family:Arial, sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:white;
+text-align:center;
+overflow:hidden;
+background:black;
+transition:background 1.5s;
+}
+
+/* ================= STARS ================= */
+#stars{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* ================= CONTAINER ================= */
+.container{
+background:rgba(30,10,25,.8);
+padding:30px;
+border-radius:25px;
+max-width:600px;
+box-shadow:0 0 40px hotpink;
+transition:transform 2s ease;
+}
+
+h1{
+animation:glow 3s infinite alternate;
+}
+
+@keyframes glow{
+from{text-shadow:0 0 10px pink;}
+to{text-shadow:0 0 30px hotpink;}
+}
+
+/* ================= BUTTONS ================= */
+.btn{
+padding:14px 26px;
+border-radius:50px;
+border:none;
+font-size:18px;
+cursor:pointer;
+margin:6px;
+transition:.25s;
+}
+
+.btn:hover{transform:scale(1.1);}
+
+.btn-yes{background:#ff4d6d;color:white;}
+.btn-maybe{background:#c77dff;}
+.btn-no{background:#555;}
+
+/* ================= HEARTS ================= */
+.heart{
+position:fixed;
+bottom:-20px;
+font-size:20px;
+animation:floatUp linear forwards;
+}
+
+@keyframes floatUp{
+to{
+transform:translateY(-110vh);
+opacity:0;
+}
+}
+
+#response{
+margin-top:20px;
+font-size:22px;
+min-height:60px;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<audio id="bgmusic" loop preload="auto">
+<source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+<h1>Will you be my girlfriend?</h1>
+
+<p>
+Hey Ivy ❤️<br><br>
+Getting to know you has honestly been one of
+the best things that's happened to me.<br><br>
+So I wanted to ask...
+</p>
+
+<button class="btn btn-yes" onclick="answer('yes')">
+YES ❤️
+</button>
+
+<button class="btn btn-maybe" onclick="answer('maybe')">
+Hmmm
+</button>
+
+<button id="noBtn" class="btn btn-no">
+NO
+</button>
+
+<div id="response"></div>
+</div>
+
 <script>
 
-/* ===============================
-PRIVATE LINK
-=============================== */
+/* ================= PRIVATE LINK ================= */
 const params=new URLSearchParams(window.location.search);
 if(params.get("ivy")!=="yes"){
-document.body.innerHTML="<h1 style='color:white'>Private Page ❤️</h1>";
+document.body.innerHTML="<h1>Private Page ❤️</h1>";
 throw new Error("Blocked");
 }
 
-/* ===============================
-CINEMATIC FADE IN
-=============================== */
-document.body.style.opacity="0";
-setTimeout(()=>{
-document.body.style.transition="opacity 2s";
-document.body.style.opacity="1";
-},200);
+/* ================= STAR BACKGROUND ================= */
+const canvas=document.getElementById("stars");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
-/* ===============================
-MUSIC + HEARTBEAT
-=============================== */
+let stars=[];
+for(let i=0;i<120;i++){
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*1.5
+});
+}
+
+function drawStars(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="white";
+stars.forEach(s=>{
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fill();
+});
+requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* ================= MUSIC ================= */
 let musicStarted=false;
-
 function startMusic(){
 if(musicStarted) return;
 musicStarted=true;
 
 const music=document.getElementById("bgmusic");
 music.volume=0.01;
-
 music.play();
 
 let v=0.01;
 let fade=setInterval(()=>{
-v+=0.015;
+v+=0.02;
 music.volume=v;
 if(v>=0.35) clearInterval(fade);
 },200);
@@ -43,9 +184,7 @@ if(v>=0.35) clearInterval(fade);
 document.addEventListener("click",startMusic);
 document.addEventListener("touchstart",startMusic);
 
-/* ===============================
-FLOATING HEARTS
-=============================== */
+/* ================= FLOATING HEARTS ================= */
 setInterval(()=>{
 let heart=document.createElement("div");
 heart.className="heart";
@@ -56,90 +195,83 @@ document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),9000);
 },500);
 
-/* ===============================
-RUNAWAY NO BUTTON
-=============================== */
+/* ================= RUNAWAY NO ================= */
 const noBtn=document.getElementById("noBtn");
-
 function escape(){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*80+"vw";
 noBtn.style.top=Math.random()*80+"vh";
 }
-
 noBtn.addEventListener("mouseover",escape);
 noBtn.addEventListener("touchstart",escape);
 
-/* ===============================
-ANSWER LOCK
-=============================== */
+/* ================= ANSWER ================= */
 let answered=false;
 
-/* ===============================
-HEARTBEAT SOUND
-=============================== */
 const heartbeat=new Audio(
 "https://www.soundjay.com/human/sounds/heartbeat-01a.mp3"
 );
 
-/* ===============================
-CINEMATIC YES MOMENT
-=============================== */
 function cinematicYes(){
 
 heartbeat.volume=.4;
 heartbeat.play();
 
-/* screen glow */
-document.body.style.transition="1.5s";
+if(navigator.vibrate){
+navigator.vibrate([200,100,200]);
+}
+
 document.body.style.background="#ff9acb";
 
-/* slow confetti waves */
+/* confetti waves */
 let count=0;
 let interval=setInterval(()=>{
-confetti({
-particleCount:80,
-spread:70,
-origin:{y:.6}
-});
+confetti({particleCount:80,spread:70,origin:{y:.6}});
 count++;
 if(count>6) clearInterval(interval);
 },400);
 
-/* zoom effect */
+/* zoom */
 document.querySelector(".container")
 .style.transform="scale(1.08)";
 
-/* LOVE LETTER REVEAL */
+/* name reveal */
+setTimeout(()=>{
+let name=document.createElement("div");
+name.innerHTML="IVY";
+name.style.position="fixed";
+name.style.top="40%";
+name.style.width="100%";
+name.style.fontSize="80px";
+name.style.textShadow="0 0 40px pink";
+document.body.appendChild(name);
+},1500);
+
+/* message */
 setTimeout(()=>{
 document.getElementById("response").innerHTML=
-`
-<h2>❤️ You said YES ❤️</h2>
-<p>
-I promise to make you smile,
-laugh, and feel loved every day.<br><br>
-This is just the beginning of
-something beautiful with you.
-</p>
-`;
+"<h2>You just made me the happiest person alive ❤️</h2>";
 },2500);
+
+/* ending */
+setTimeout(()=>{
+document.body.innerHTML=
+"<div style='height:100vh;display:flex;justify-content:center;align-items:center;background:black;font-size:32px;'>✨ Our story begins now ✨</div>";
+},9000);
 }
 
-/* ===============================
-MAIN ANSWER
-=============================== */
 function answer(type){
 
 if(answered) return;
 answered=true;
 
-if(type==="yes"){
-cinematicYes();
-}
-else if(type==="maybe"){
+if(type==="yes") cinematicYes();
+else
 document.getElementById("response")
 .innerHTML="I'll wait for you ❤️";
 }
-}
 
 </script>
+
+</body>
+</html>
